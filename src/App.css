@@ -1,0 +1,165 @@
+#root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.app-container {
+  width: min(100%, 560px);
+  padding: 32px;
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0 24px 60px rgba(30, 64, 175, 0.18);
+}
+
+.header {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.header h1 {
+  margin: 0;
+  color: #1d4ed8;
+  font-size: 2.2rem;
+}
+
+.header p {
+  margin: 8px 0 0;
+  color: #64748b;
+}
+
+.task-form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.task-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  outline: none;
+}
+
+.task-form input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.task-form button,
+.task button {
+  border: 0;
+  border-radius: 12px;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.task-form button {
+  padding: 12px 18px;
+  background: #2563eb;
+}
+
+.task-list {
+  display: grid;
+  gap: 12px;
+  padding: 0;
+  margin: 0 0 24px;
+  list-style: none;
+}
+
+.task {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.task label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.task input {
+  width: 18px;
+  height: 18px;
+  accent-color: #2563eb;
+}
+
+.task span {
+  overflow-wrap: anywhere;
+}
+
+.task button {
+  flex-shrink: 0;
+  padding: 9px 12px;
+  background: #dc2626;
+}
+
+.completed {
+  background: #f1f5f9;
+}
+
+.completed span {
+  color: #64748b;
+  text-decoration: line-through;
+}
+
+.empty-state {
+  margin: 0 0 24px;
+  padding: 18px;
+  border: 1px dashed #93c5fd;
+  border-radius: 14px;
+  color: #475569;
+  text-align: center;
+  background: #eff6ff;
+}
+
+.footer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding-top: 18px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.footer p {
+  margin: 0;
+  padding: 12px 8px;
+  border-radius: 12px;
+  color: #1e40af;
+  font-weight: 700;
+  text-align: center;
+  background: #dbeafe;
+}
+
+@media (max-width: 520px) {
+  .app-container {
+    padding: 24px 18px;
+  }
+
+  .task-form,
+  .task,
+  .footer {
+    grid-template-columns: 1fr;
+  }
+
+  .task-form,
+  .task {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .task button,
+  .task-form button {
+    width: 100%;
+  }
+}
