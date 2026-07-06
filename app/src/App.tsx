@@ -13,16 +13,28 @@ import {
   type Task,
 } from "./services/taskService";
 
+const TOKEN_KEY = "tm_token";
+
 function App() {
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(
+    () => localStorage.getItem(TOKEN_KEY)
+  );
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
     if (token) getTasks(token).then(setTasks);
   }, [token]);
 
-  const handleLogin = (t: string) => setToken(t);
-  const handleLogout = () => { setToken(null); setTasks([]); };
+  const handleLogin = (t: string) => {
+    localStorage.setItem(TOKEN_KEY, t);
+    setToken(t);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem(TOKEN_KEY);
+    setToken(null);
+    setTasks([]);
+  };
 
   const addTask = async (text: string) => {
     if (!token) return;
