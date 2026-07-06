@@ -19,7 +19,7 @@ export default function Footer({ tasks }: FooterProps) {
       {stats.map((s) => (
         <Grid key={s.label} size={4}>
           <Paper variant="outlined" sx={{ py: 2, textAlign: "center", borderColor: "divider" }}>
-            <Typography variant="h5" fontWeight={700} color={s.color}>
+            <Typography variant="h5" sx={{ fontWeight: 700, color: s.color }}>
               {s.value}
             </Typography>
             <Typography variant="caption" color="text.secondary" sx={{ textTransform: "uppercase", letterSpacing: 0.5 }}>

@@ -8,28 +8,28 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
-    "dev1": "ts-node src/index.ts",
-    "build": "tsc",
+    "build": "prisma generate && tsc",
     "start": "node dist/index.js",
+    "postinstall": "prisma generate",
     "seed": "ts-node prisma/seed.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "@prisma/adapter-pg": "latest",
     "@prisma/client": "^7.8.0",
+    "bcrypt": "latest",
     "cors": "latest",
     "dotenv": "latest",
     "express": "^5.2.1",
-    "bcrypt": "latest",
     "jsonwebtoken": "^9.0.3",
     "nodemon": "^3.1.14",
     "pg": "latest",
     "typescript": "^6.0.3"
   },
   "devDependencies": {
+    "@types/bcrypt": "latest",
     "@types/cors": "latest",
     "@types/express": "^5.0.6",
-    "@types/bcrypt": "latest",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^26.0.1",
     "@types/pg": "latest",

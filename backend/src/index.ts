@@ -28,7 +28,7 @@ import { createAuthRouter } from "./infrastructure/http/auth.router";
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 
-// Repositories (adapters implementing domain ports)
+// Repositories
 const userRepository = new PrismaUserRepository(prisma);
 const taskRepository = new PrismaTaskRepository(prisma);
 
@@ -45,7 +45,6 @@ const deleteTaskUseCase = new DeleteTaskUseCase(taskRepository);
 
 // HTTP layer
 const app = express();
-const PORT = 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -66,6 +65,12 @@ app.use(
   )
 );
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Local dev server — Vercel uses the exported app instead
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+module.exports = app;

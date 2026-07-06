@@ -11,8 +11,8 @@ export default function Header({ onLogout }: HeaderProps) {
       <Box>
         <Typography
           variant="h4"
-          fontWeight={800}
           sx={{
+            fontWeight: 800,
             background: "linear-gradient(135deg, #818CF8, #6366F1)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
