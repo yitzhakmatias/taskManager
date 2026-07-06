@@ -1,71 +1,60 @@
-import { useState } from "react";
-import "./App.css";
+import { useEffect, useState } from "react";
+import { Box, Container } from "@mui/material";
 import Header from "./components/Header";
 import TaskInput from "./components/TaskInput";
 import TaskList from "./components/TaskList";
 import Footer from "./components/Footer";
-
-type Task = {
-  id: number;
-  text: string;
-  completed: boolean;
-};
+import LoginPage from "./components/LoginPage";
+import {
+  getTasks,
+  createTask,
+  toggleTask as toggleTaskService,
+  deleteTask as deleteTaskService,
+  type Task,
+} from "./services/taskService";
 
 function App() {
-  const [tasks, setTasks] = useState<Task[]>([
-    { id: 1, text: "Estudiar React", completed: false },
-    { id: 2, text: "Practicar TypeScript", completed: false },
-    { id: 3, text: "Entender estado", completed: true },
-  ]);
+  const [token, setToken] = useState<string | null>(null);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
-  const addTask = (text: string) => {
-    const newTask: Task = {
-      id: Date.now(),
-      text,
-      completed: false,
-    };
+  useEffect(() => {
+    if (token) getTasks(token).then(setTasks);
+  }, [token]);
 
-    setTasks([...tasks, newTask]);
+  const handleLogin = (t: string) => setToken(t);
+  const handleLogout = () => { setToken(null); setTasks([]); };
+
+  const addTask = async (text: string) => {
+    if (!token) return;
+    const newTask = await createTask(text, token);
+    setTasks((prev) => [...prev, newTask]);
   };
 
-  const deleteTask = (id: number) => {
-    const updatedTasks = tasks.filter((task) => task.id !== id);
-    setTasks(updatedTasks);
+  const deleteTask = async (id: number) => {
+    if (!token) return;
+    await deleteTaskService(id, token);
+    setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
-  const toggleTask = (id: number) => {
-    const updatedTasks = tasks.map((task) => {
-      if (task.id === id) {
-        return {
-          ...task,
-          completed: !task.completed,
-        };
-      }
-
-      return task;
-    });
-
-    setTasks(updatedTasks);
+  const toggleTask = async (id: number) => {
+    if (!token) return;
+    const task = tasks.find((t) => t.id === id);
+    if (!task) return;
+    const updated = await toggleTaskService(id, task.completed, token);
+    setTasks((prev) => prev.map((t) => (t.id === id ? updated : t)));
   };
 
-  const completedTasks = tasks.filter((task) => task.completed).length;
-  const pendingTasks = tasks.length - completedTasks;
+  if (!token) return <LoginPage onLogin={handleLogin} />;
 
   return (
-    <div className="app-container">
-      <Header />
-      <TaskInput onAddTask={addTask} />
-      <TaskList
-        tasks={tasks}
-        onDeleteTask={deleteTask}
-        onToggleTask={toggleTask}
-      />
-      <Footer
-        total={tasks.length}
-        completed={completedTasks}
-        pending={pendingTasks}
-      />
-    </div>
+    <Box sx={{ minHeight: "100vh", bgcolor: "background.default", py: 5 }}>
+      <Container maxWidth="sm">
+        <Header onLogout={handleLogout} />
+        <TaskInput onAddTask={addTask} />
+        <TaskList tasks={tasks} onDeleteTask={deleteTask} onToggleTask={toggleTask} />
+        <Footer tasks={tasks} />
+      </Container>
+    </Box>
   );
 }
 

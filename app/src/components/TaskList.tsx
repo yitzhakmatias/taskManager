@@ -1,35 +1,21 @@
+import { Stack } from "@mui/material";
 import TaskCard from "./TaskCard";
 import EmptyState from "./EmptyState";
 
-type Task = {
-  id: number;
-  text: string;
-  completed: boolean;
-};
-
-type TaskListProps = {
+type Task = { id: number; text: string; completed: boolean };
+interface TaskListProps {
   tasks: Task[];
   onDeleteTask: (id: number) => void;
   onToggleTask: (id: number) => void;
-};
-
-function TaskList(props: TaskListProps) {
-  if (props.tasks.length === 0) {
-    return <EmptyState />;
-  }
-
-  return (
-    <ul className="task-list">
-      {props.tasks.map((task) => (
-        <TaskCard
-          key={task.id}
-          task={task}
-          onDeleteTask={props.onDeleteTask}
-          onToggleTask={props.onToggleTask}
-        />
-      ))}
-    </ul>
-  );
 }
 
-export default TaskList;
+export default function TaskList({ tasks, onDeleteTask, onToggleTask }: TaskListProps) {
+  if (tasks.length === 0) return <EmptyState />;
+  return (
+    <Stack spacing={1.5} sx={{ mb: 3 }}>
+      {tasks.map((task) => (
+        <TaskCard key={task.id} task={task} onDeleteTask={onDeleteTask} onToggleTask={onToggleTask} />
+      ))}
+    </Stack>
+  );
+}

@@ -11,19 +11,26 @@
     "dev1": "ts-node src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
+    "seed": "ts-node prisma/seed.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "@prisma/adapter-pg": "latest",
     "@prisma/client": "^7.8.0",
+    "cors": "latest",
     "dotenv": "latest",
     "express": "^5.2.1",
+    "bcrypt": "latest",
+    "jsonwebtoken": "^9.0.3",
     "nodemon": "^3.1.14",
     "pg": "latest",
     "typescript": "^6.0.3"
   },
   "devDependencies": {
+    "@types/cors": "latest",
     "@types/express": "^5.0.6",
+    "@types/bcrypt": "latest",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^26.0.1",
     "@types/pg": "latest",
     "prisma": "^7.8.0",

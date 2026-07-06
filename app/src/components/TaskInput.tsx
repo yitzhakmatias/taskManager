@@ -1,36 +1,44 @@
 import { useState, type FormEvent } from "react";
+import { Box, TextField, Button } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 
-type TaskInputProps = {
+interface TaskInputProps {
   onAddTask: (text: string) => void;
-};
+}
 
-function TaskInput(props: TaskInputProps) {
+export default function TaskInput({ onAddTask }: TaskInputProps) {
   const [text, setText] = useState("");
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const trimmedText = text.trim();
-
-    if (trimmedText === "") {
-      return;
-    }
-
-    props.onAddTask(trimmedText);
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    onAddTask(trimmed);
     setText("");
   };
 
   return (
-    <form className="task-form" onSubmit={handleSubmit}>
-      <input
-        type="text"
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{ display: "flex", gap: 1.5, mb: 3 }}
+    >
+      <TextField
+        fullWidth
+        size="small"
         value={text}
-        onChange={(event) => setText(event.target.value)}
-        placeholder="Escribe una nueva tarea"
+        onChange={(e) => setText(e.target.value)}
+        placeholder="Escribe una nueva tarea..."
+        variant="outlined"
       />
-      <button type="submit">Agregar</button>
-    </form>
+      <Button
+        type="submit"
+        variant="contained"
+        startIcon={<AddIcon />}
+        sx={{ whiteSpace: "nowrap", px: 3 }}
+      >
+        Agregar
+      </Button>
+    </Box>
   );
 }
-
-export default TaskInput;

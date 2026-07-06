@@ -1,165 +1,452 @@
+/* ── Design Tokens ──────────────────────────────────────────────── */
+:root {
+  --bg-base:       #0F1117;
+  --bg-surface:    #1A1D27;
+  --bg-elevated:   #22263A;
+  --bg-hover:      #2A2F47;
+  --primary:       #6366F1;
+  --primary-hover: #4F52D9;
+  --primary-dim:   rgba(99, 102, 241, 0.15);
+  --danger:        #EF4444;
+  --danger-hover:  #DC2626;
+  --danger-dim:    rgba(239, 68, 68, 0.12);
+  --success:       #22C55E;
+  --border:        rgba(255, 255, 255, 0.08);
+  --border-focus:  rgba(99, 102, 241, 0.6);
+  --text-primary:  #F1F5F9;
+  --text-secondary:#94A3B8;
+  --text-muted:    #64748B;
+  --shadow-card:   0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-fab:    0 8px 32px rgba(99, 102, 241, 0.35);
+  --radius-sm:     8px;
+  --radius-md:     14px;
+  --radius-lg:     20px;
+  --transition:    0.18s ease;
+}
+
+/* ── Layout ─────────────────────────────────────────────────────── */
 #root {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 32px 16px;
+  min-height: 100vh;
+  padding: 40px 16px;
+  background: var(--bg-base);
 }
 
 .app-container {
-  width: min(100%, 560px);
-  padding: 32px;
-  border-radius: 24px;
-  background: #ffffff;
-  box-shadow: 0 24px 60px rgba(30, 64, 175, 0.18);
+  width: min(100%, 580px);
 }
 
+/* ── Header ─────────────────────────────────────────────────────── */
 .header {
-  margin-bottom: 24px;
+  margin-bottom: 28px;
   text-align: center;
 }
 
 .header h1 {
-  margin: 0;
-  color: #1d4ed8;
-  font-size: 2.2rem;
+  margin: 0 0 4px;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #818CF8, #6366F1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .header p {
-  margin: 8px 0 0;
-  color: #64748b;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
 }
 
+/* ── Logout bar ─────────────────────────────────────────────────── */
+.logout-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.logout-button {
+  padding: 7px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  transition: all var(--transition);
+}
+
+.logout-button:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: var(--danger-dim);
+}
+
+/* ── Task Input ─────────────────────────────────────────────────── */
 .task-form {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   margin-bottom: 24px;
+  padding: 20px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
 }
 
 .task-form input {
   flex: 1;
   min-width: 0;
-  padding: 12px 14px;
-  border: 1px solid #bfdbfe;
-  border-radius: 12px;
+  padding: 12px 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
   outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.task-form input::placeholder {
+  color: var(--text-muted);
 }
 
 .task-form input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-}
-
-.task-form button,
-.task button {
-  border: 0;
-  border-radius: 12px;
-  color: #ffffff;
-  font-weight: 700;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--primary-dim);
 }
 
 .task-form button {
-  padding: 12px 18px;
-  background: #2563eb;
+  padding: 12px 22px;
+  background: var(--primary);
+  border: 0;
+  border-radius: var(--radius-md);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
+  box-shadow: var(--shadow-fab);
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
 }
 
+.task-form button:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 36px rgba(99, 102, 241, 0.45);
+}
+
+.task-form button:active {
+  transform: translateY(0);
+}
+
+/* ── Task List ──────────────────────────────────────────────────── */
 .task-list {
   display: grid;
-  gap: 12px;
+  gap: 10px;
   padding: 0;
   margin: 0 0 24px;
   list-style: none;
 }
 
+/* ── Task Card ──────────────────────────────────────────────────── */
 .task {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 14px;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  background: #f8fafc;
+  gap: 14px;
+  padding: 16px 18px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  transition: background var(--transition), border-color var(--transition), transform var(--transition);
+}
+
+.task:hover {
+  background: var(--bg-elevated);
+  border-color: rgba(255,255,255,0.12);
+  transform: translateY(-1px);
 }
 
 .task label {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   min-width: 0;
+  flex: 1;
+  cursor: pointer;
 }
 
-.task input {
-  width: 18px;
-  height: 18px;
-  accent-color: #2563eb;
+/* Custom checkbox */
+.task input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border: 2px solid var(--text-muted);
+  border-radius: 6px;
+  background: var(--bg-elevated);
+  cursor: pointer;
+  position: relative;
+  transition: all var(--transition);
+}
+
+.task input[type="checkbox"]:checked {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.task input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 6px;
+  height: 10px;
+  border: 2px solid #fff;
+  border-top: 0;
+  border-left: 0;
+  transform: rotate(45deg);
 }
 
 .task span {
   overflow-wrap: anywhere;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 .task button {
   flex-shrink: 0;
-  padding: 9px 12px;
-  background: #dc2626;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 1rem;
+  transition: all var(--transition);
 }
 
+.task button:hover {
+  background: var(--danger-dim);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* Completed state */
 .completed {
-  background: #f1f5f9;
+  border-color: rgba(34, 197, 94, 0.12);
 }
 
 .completed span {
-  color: #64748b;
+  color: var(--text-muted);
   text-decoration: line-through;
 }
 
+/* ── Empty State ────────────────────────────────────────────────── */
 .empty-state {
   margin: 0 0 24px;
-  padding: 18px;
-  border: 1px dashed #93c5fd;
-  border-radius: 14px;
-  color: #475569;
+  padding: 40px 24px;
+  background: var(--bg-surface);
+  border: 1px dashed rgba(99, 102, 241, 0.3);
+  border-radius: var(--radius-lg);
+  color: var(--text-muted);
   text-align: center;
-  background: #eff6ff;
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
+/* ── Footer ─────────────────────────────────────────────────────── */
 .footer {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  padding-top: 18px;
-  border-top: 1px solid #e2e8f0;
 }
 
 .footer p {
   margin: 0;
-  padding: 12px 8px;
-  border-radius: 12px;
-  color: #1e40af;
-  font-weight: 700;
+  padding: 14px 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
   text-align: center;
-  background: #dbeafe;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
+.footer p strong {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 2px;
+}
+
+/* ── Login Page ─────────────────────────────────────────────────── */
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px 16px;
+  background: var(--bg-base);
+}
+
+.login-card {
+  width: min(100%, 420px);
+  padding: 40px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.login-title {
+  margin: 0 0 8px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  background: linear-gradient(135deg, #818CF8, #6366F1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.login-subtitle {
+  margin: 0 0 28px;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.login-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 28px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  padding: 4px;
+}
+
+.login-tab {
+  flex: 1;
+  padding: 9px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all var(--transition);
+}
+
+.login-tab.active {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(99, 102, 241, 0.35);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.form-group input {
+  padding: 13px 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.form-group input::placeholder {
+  color: var(--text-muted);
+}
+
+.form-group input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--primary-dim);
+}
+
+.login-error {
+  margin: 0;
+  padding: 12px 16px;
+  background: var(--danger-dim);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: var(--radius-sm);
+  color: #FCA5A5;
+  font-size: 0.875rem;
+}
+
+.login-button {
+  padding: 14px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  box-shadow: var(--shadow-fab);
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  margin-top: 4px;
+}
+
+.login-button:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 36px rgba(99, 102, 241, 0.45);
+}
+
+.login-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.login-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────── */
 @media (max-width: 520px) {
-  .app-container {
-    padding: 24px 18px;
-  }
-
-  .task-form,
-  .task,
-  .footer {
-    grid-template-columns: 1fr;
-  }
-
-  .task-form,
-  .task {
+  .task-form {
     flex-direction: column;
-    align-items: stretch;
   }
 
-  .task button,
   .task-form button {
     width: 100%;
+  }
+
+  .footer p strong {
+    font-size: 1.2rem;
   }
 }

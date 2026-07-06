@@ -13,66 +13,146 @@
       }
     },
     {
-      "name": "GET /tasks",
-      "request": {
-        "method": "GET",
-        "url": "http://localhost:3000/tasks",
-        "description": "Obtiene la lista de todas las tareas"
-      }
-    },
-    {
-      "name": "POST /tasks",
-      "request": {
-        "method": "POST",
-        "url": "http://localhost:3000/tasks",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"text\": \"Nueva tarea de prueba\"\n}",
-          "options": {
-            "raw": {
-              "language": "json"
+      "name": "Auth",
+      "item": [
+        {
+          "name": "POST /login - credenciales correctas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.token) {",
+                  "  pm.collectionVariables.set('token', json.token);",
+                  "  console.log('Token guardado:', json.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
             }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:3000/login",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@test.com\",\n  \"password\": \"123456\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Login exitoso. El token JWT se guarda automáticamente en la variable {{token}}"
           }
         },
-        "description": "Crea una nueva tarea. Body requerido: { text: string }"
-      }
-    },
-    {
-      "name": "PUT /tasks/:id",
-      "request": {
-        "method": "PUT",
-        "url": "http://localhost:3000/tasks/1",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"text\": \"Tarea actualizada\",\n  \"completed\": true\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
+        {
+          "name": "POST /login - credenciales incorrectas",
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:3000/login",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@test.com\",\n  \"password\": \"wrong\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Debe devolver 401 Invalid credentials"
           }
         },
-        "description": "Actualiza texto y/o completed de una tarea por id"
-      }
+        {
+          "name": "GET /profile - sin token",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3000/profile",
+            "description": "Sin Authorization header — debe devolver 401 No token provided"
+          }
+        },
+        {
+          "name": "GET /profile - token invalido",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3000/profile",
+            "header": [
+              { "key": "Authorization", "value": "Bearer token_invalido_aqui" }
+            ],
+            "description": "Token falso — debe devolver 401 Invalid token"
+          }
+        },
+        {
+          "name": "GET /profile - token valido",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3000/profile",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "description": "Usa el token guardado por POST /login. Ejecutar login primero para llenar {{token}}"
+          }
+        }
+      ]
     },
     {
-      "name": "DELETE /tasks/:id",
-      "request": {
-        "method": "DELETE",
-        "url": "http://localhost:3000/tasks/1",
-        "description": "Elimina una tarea por id"
-      }
+      "name": "Tasks",
+      "item": [
+        {
+          "name": "GET /tasks",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3000/tasks",
+            "description": "Obtiene la lista de todas las tareas"
+          }
+        },
+        {
+          "name": "POST /tasks",
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:3000/tasks",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Nueva tarea de prueba\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Crea una nueva tarea. Body requerido: { text: string }"
+          }
+        },
+        {
+          "name": "PUT /tasks/:id",
+          "request": {
+            "method": "PUT",
+            "url": "http://localhost:3000/tasks/1",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Tarea actualizada\",\n  \"completed\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Actualiza texto y/o completed de una tarea por id"
+          }
+        },
+        {
+          "name": "DELETE /tasks/:id",
+          "request": {
+            "method": "DELETE",
+            "url": "http://localhost:3000/tasks/1",
+            "description": "Elimina una tarea por id"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "token",
+      "value": "",
+      "description": "JWT token — se llena automáticamente al ejecutar POST /login exitoso"
     }
   ]
 }

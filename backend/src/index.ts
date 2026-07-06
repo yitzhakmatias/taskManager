@@ -1,75 +1,70 @@
 require("dotenv/config");
 const express = require("express");
+const cors = require("cors");
 const { PrismaClient } = require("@prisma/client");
 const { PrismaPg } = require("@prisma/adapter-pg");
 
-const app = express();
-const PORT = 3000;
+// Infrastructure — database adapters
+import { PrismaTaskRepository } from "./infrastructure/database/prisma-task.repository";
+import { PrismaUserRepository } from "./infrastructure/database/prisma-user.repository";
+
+// Application — task use cases
+import { GetTasksUseCase } from "./application/task/get-tasks.use-case";
+import { CreateTaskUseCase } from "./application/task/create-task.use-case";
+import { UpdateTaskUseCase } from "./application/task/update-task.use-case";
+import { DeleteTaskUseCase } from "./application/task/delete-task.use-case";
+
+// Application — auth use cases
+import { LoginUseCase } from "./application/auth/login.use-case";
+import { GetProfileUseCase } from "./application/auth/get-profile.use-case";
+import { RegisterUseCase } from "./application/auth/register.use-case";
+
+// Infrastructure — HTTP routers
+import { createTaskRouter } from "./infrastructure/http/task.router";
+import { createAuthRouter } from "./infrastructure/http/auth.router";
+
+// ── Composition Root ──────────────────────────────────────────────────────────
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 
+// Repositories (adapters implementing domain ports)
+const userRepository = new PrismaUserRepository(prisma);
+const taskRepository = new PrismaTaskRepository(prisma);
+
+// Auth use cases
+const loginUseCase = new LoginUseCase(userRepository);
+const getProfileUseCase = new GetProfileUseCase();
+const registerUseCase = new RegisterUseCase(userRepository);
+
+// Task use cases
+const getTasksUseCase = new GetTasksUseCase(taskRepository);
+const createTaskUseCase = new CreateTaskUseCase(taskRepository);
+const updateTaskUseCase = new UpdateTaskUseCase(taskRepository);
+const deleteTaskUseCase = new DeleteTaskUseCase(taskRepository);
+
+// HTTP layer
+const app = express();
+const PORT = 3000;
+
+app.use(cors());
 app.use(express.json());
 
-// GET / - health check
-app.get("/", (req: any, res: any) => {
-  res.send("Backend is working!");
-});
+app.get("/", (_req: any, res: any) => res.send("Backend is working!"));
 
-// GET /tasks - get all tasks
-app.get("/tasks", async (req: any, res: any) => {
-  const tasks = await prisma.task.findMany();
-  res.json(tasks);
-});
+// Auth routes: POST /login, POST /register, GET /profile
+app.use("/", createAuthRouter(loginUseCase, getProfileUseCase, registerUseCase));
 
-// POST /tasks - create a task
-app.post("/tasks", async (req: any, res: any) => {
-  const { text } = req.body;
-
-  if (!text || text.trim() === "") {
-    return res.status(400).json({ error: "Text is required" });
-  }
-
-  const task = await prisma.task.create({
-    data: { text: text.trim() },
-  });
-
-  res.status(201).json(task);
-});
-
-// PUT /tasks/:id - update a task
-app.put("/tasks/:id", async (req: any, res: any) => {
-  const id = Number(req.params.id);
-  const { text, completed } = req.body;
-
-  const existing = await prisma.task.findUnique({ where: { id } });
-  if (!existing) {
-    return res.status(404).json({ error: "Task not found" });
-  }
-
-  const task = await prisma.task.update({
-    where: { id },
-    data: {
-      ...(text !== undefined && { text }),
-      ...(completed !== undefined && { completed }),
-    },
-  });
-
-  res.json(task);
-});
-
-// DELETE /tasks/:id - delete a task
-app.delete("/tasks/:id", async (req: any, res: any) => {
-  const id = Number(req.params.id);
-
-  const existing = await prisma.task.findUnique({ where: { id } });
-  if (!existing) {
-    return res.status(404).json({ error: "Task not found" });
-  }
-
-  await prisma.task.delete({ where: { id } });
-  res.json({ message: "Task deleted" });
-});
+// Task routes: GET|POST /tasks, PUT|DELETE /tasks/:id
+app.use(
+  "/tasks",
+  createTaskRouter(
+    getTasksUseCase,
+    createTaskUseCase,
+    updateTaskUseCase,
+    deleteTaskUseCase
+  )
+);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
