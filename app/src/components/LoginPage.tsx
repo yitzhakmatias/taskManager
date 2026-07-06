@@ -47,7 +47,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
           <Box sx={{ width: 48, height: 48, borderRadius: "50%", bgcolor: "primary.main", display: "flex", alignItems: "center", justifyContent: "center", mx: "auto", mb: 1.5 }}>
             <LockOutlinedIcon sx={{ color: "#fff" }} />
           </Box>
-          <Typography variant="h5" fontWeight={700}>Task Manager</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 700 }}>Task Manager</Typography>
           <Typography variant="body2" color="text.secondary">Gestiona tus tareas de forma segura</Typography>
         </Box>
 
