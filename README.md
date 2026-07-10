@@ -1,5 +1,7 @@
 # Task Manager — React + TypeScript + Express/Prisma
 
+<!-- BADGE_CI -->
+
 Classroom assignment (`app/Actividad_Task_Manager_React_TypeScript.pdf`) implementing a task
 manager with user authentication. The repo has two independent npm projects:
 
@@ -84,7 +86,30 @@ exist yet.
 | PUT    | /tasks/:id| Yes  | Update a task (text/completed)|
 | DELETE | /tasks/:id| Yes  | Delete a task                 |
 
+## Comandos disponibles
+
+| Comando | Descripcion |
+|---|---|
+| `npm run dev` | Levanta el entorno de desarrollo |
+| `npm run build` | Genera el build de produccion |
+| `npm run seed` | Crea usuarios y datos de prueba en la base de datos |
+| `npm test` | Pruebas automatizadas (pendiente — Sesion 3) |
+
+## Base de datos
+
+PostgreSQL con migraciones y seeds gestionados con Prisma (ver backend/prisma/). Hosted en Neon (produccion) o PostgreSQL local (desarrollo).
+
+### Variables de entorno
+
+Crea un archivo `.env` en `backend/` con las siguientes claves (sin valores reales en este documento):
+
+```
+DATABASE_URL=
+JWT_SECRET=
+PORT=
+```
+
 ## Verification
 
-- Frontend: `npm run build` in `app/` (`tsc -b && vite build`) — no test/lint scripts exist.
-- Backend: `npm run build` in `backend/` (`tsc`).
+- Frontend: `npm run build` in `app/` (`tsc -b && vite build`)
+- Backend: `npm run build` in `backend/` (`tsc`)
